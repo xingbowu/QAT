@@ -1,4 +1,4 @@
-from modeling.modeling_encoder import MODEL_NAME_TO_CLASS
+from modeling.modeling_encoder import MODEL_NAME_TO_CLASS, get_model_class_from_name
 from utils.medqa_data_utils import *
 
 
@@ -17,7 +17,7 @@ class MedQA_DataLoader(object):
         self.device0, self.device1 = device
         self.is_inhouse = is_inhouse
 
-        model_type = MODEL_NAME_TO_CLASS[model_name]
+        model_type = get_model_class_from_name(model_name)
         print ('train_statement_path', train_statement_path)
         self.train_qids, self.train_labels, *self.train_encoder_data = load_input_tensors(train_statement_path, model_type, model_name, max_seq_length)
         self.dev_qids, self.dev_labels, *self.dev_encoder_data = load_input_tensors(dev_statement_path, model_type, model_name, max_seq_length)

@@ -29,6 +29,24 @@ MODEL_NAME_TO_CLASS = {model_name: model_class for model_class, model_name_list 
 model_name = 'cambridgeltl/SapBERT-from-PubMedBERT-fulltext'
 MODEL_NAME_TO_CLASS[model_name] = 'bert'
 
+def get_model_class_from_name(model_name):
+    """
+    获取模型类别，支持标准模型名称和本地路径
+    """
+    # 如果在字典中直接找到，返回
+    if model_name in MODEL_NAME_TO_CLASS:
+        return MODEL_NAME_TO_CLASS[model_name]
+    
+    # 如果是本地路径，尝试从路径中提取模型类型
+    model_name_lower = model_name.lower()
+    for model_class in ['roberta', 'bert', 'albert', 'xlnet', 'gpt']:
+        if model_class in model_name_lower:
+            return model_class
+    
+    # 如果都找不到，抛出错误
+    raise KeyError(f"Cannot determine model class for '{model_name}'. "
+                   f"Please use a standard model name or ensure the path contains the model type (e.g., 'roberta', 'bert').")
+
 class LSTMTextEncoder(nn.Module):
     pool_layer_classes = {'mean': MeanPoolLayer, 'max': MaxPoolLayer}
 
@@ -91,7 +109,7 @@ class TextEncoder(nn.Module):
         if 'aristo-roberta' in model_name:
             self.model_type = 'aristo-roberta'
         else:
-            self.model_type = MODEL_NAME_TO_CLASS[model_name]
+            self.model_type = get_model_class_from_name(model_name)
         self.output_token_states = output_token_states
         if 'concat_choice' in kwargs :
             self.concat_choice = kwargs['concat_choice']

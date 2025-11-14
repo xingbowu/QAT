@@ -95,6 +95,7 @@ def main():
     # Added for Medical QA
     parser.add_argument('--drop_partial_batch', default=False, type=bool_flag, help='')
     parser.add_argument('--fill_partial_batch', default=False, type=bool_flag, help='')
+    parser.add_argument('--add_nodefeatsim', default='none', type=str, choices=['none', 'diff', 'prod'], help='add node feature similarity')
 
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, help='show this help message and exit')
     args = parser.parse_args()

@@ -1,4 +1,4 @@
-from modeling.modeling_encoder import TextEncoder, MODEL_NAME_TO_CLASS
+from modeling.modeling_encoder import TextEncoder, MODEL_NAME_TO_CLASS, get_model_class_from_name
 from utils.data_utils_path import *
 from utils.layers import *
 from utils.utils import make_one_hot
@@ -514,7 +514,7 @@ class LM_QAT_DataLoader(object):
         if 'aristo-roberta' in model_name:
             model_type = 'aristo-roberta'
         else:
-            model_type = MODEL_NAME_TO_CLASS[model_name]
+            model_type = get_model_class_from_name(model_name)
             
         print ('train_statement_path', train_statement_path)
         self.train_qids, self.train_labels, *self.train_encoder_data = load_input_tensors(train_statement_path, model_type, model_name, max_seq_length, args.load_sentvecs_model_path)

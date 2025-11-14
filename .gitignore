@@ -1,1 +1,5 @@
 data
+logs/*
+.vector_cache/*
+saved_models/*
+*.pyc

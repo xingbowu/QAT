@@ -2,7 +2,8 @@ export CUDA_VISIBLE_DEVICES=6,7
 dt=`date '+%Y%m%d_%H%M%S'`
 
 dataset="csqa"
-model='roberta-large'
+data_dir="/data1/dataset/qat/qat_data"
+model='/data1/models/FacebookAI/roberta-large'
 #shift
 #shift
 args=$@
@@ -45,15 +46,15 @@ lambda="10"
 ###### Training ######
 for seed in 0; do
   python3 -u main_qat.py --dataset $dataset \
-      --encoder $model -k $k \
+      --encoder $model -k $k --inhouse false \
       -elr $elr -dlr $dlr -bs $bs -mbs ${mbs} -ebs ${ebs} --weight_decay ${weight_decay} --seed $seed \
       --n_epochs $n_epochs --max_epochs_before_stop 10  \
-      --train_adj data/${dataset}/graph/train.graph.adj.ori2.metapath.2.q2a.seq.pk \
-      --dev_adj data/${dataset}/graph/dev.graph.adj.ori2.metapath.2.q2a.seq.pk \
-      --test_adj  data/${dataset}/graph/test.graph.adj.ori2.metapath.2.q2a.seq.pk\
-      --train_statements  data/${dataset}/statement/train.statement.jsonl \
-      --dev_statements  data/${dataset}/statement/dev.statement.jsonl \
-      --test_statements  data/${dataset}/statement/test.statement.jsonl \
+      --train_adj ${data_dir}/${dataset}/graph/train.graph.adj.ori2.metapath.2.q2a.seq.pk \
+      --dev_adj ${data_dir}/${dataset}/graph/dev.graph.adj.ori2.metapath.2.q2a.seq.pk \
+      --test_adj ${data_dir}/${dataset}/graph/test.graph.adj.ori2.metapath.2.q2a.seq.pk \
+      --train_statements ${data_dir}/${dataset}/statement/train.statement.jsonl \
+      --dev_statements ${data_dir}/${dataset}/statement/dev.statement.jsonl \
+      --test_statements ${data_dir}/${dataset}/statement/test.statement.jsonl \
       --max_seq_len 88     \
       --num_relation 38    \
       --unfreeze_epoch 4 \
