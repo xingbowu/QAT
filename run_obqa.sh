@@ -1,7 +1,7 @@
 export CUDA_VISIBLE_DEVICES=6,7
 dt=`date '+%Y%m%d_%H%M%S'`
 
-dataset="csqa"
+dataset="obqa"
 data_dir="/data1/dataset/qat_data"
 model='/data1/models/FacebookAI/roberta-large'
 #shift
@@ -18,18 +18,19 @@ args=$@
 # echo "******************************"
 
 save_dir_pref='experiments'
-logs_dir_pref='logs/csqa'
+logs_dir_pref='logs/obqa'
 mkdir -p $save_dir_pref
 mkdir -p $logs_dir_pref
 
 
+# OpenBookQA 训练参数
 n_epochs=30
 bs=128
 mbs=4
 ebs=8
 enc_dim=32
 
-elr="2e-5"
+elr="1e-5"        # OpenBookQA 推荐的编码器学习率
 dlr="1e-4"
 weight_decay="1e-2"
 dropout="1e-1"
@@ -55,7 +56,7 @@ for seed in 0; do
       --train_statements ${data_dir}/${dataset}/statement/train.statement.jsonl \
       --dev_statements ${data_dir}/${dataset}/statement/dev.statement.jsonl \
       --test_statements ${data_dir}/${dataset}/statement/test.statement.jsonl \
-      --max_seq_len 88     \
+      --max_seq_len 100    \
       --num_relation 38    \
       --unfreeze_epoch 4 \
       --log_interval 10 \
@@ -72,3 +73,4 @@ for seed in 0; do
       --lambda_rpe ${lambda} \
   | tee -a $logs_dir_pref/newFT_path.${dataset}_${elr}.${dlr}.${weight_decay}.${dropout}_${tr_dim}.${ffn_dim}.${num_heads}__seed${seed}_${dt}.log.txt
 done
+
